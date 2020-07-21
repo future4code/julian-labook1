@@ -1,4 +1,4 @@
-import { Database } from "../Database";
+import { Database } from "./Database";
 
 export class UserDatabase extends Database {
   private tableName = "Labook_User";

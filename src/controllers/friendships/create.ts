@@ -3,7 +3,7 @@ import { Authenticator } from "../../service/Authenticator"
 import { FriendshipDatabase } from "../../data/FriendshipDataBase"
 import { Database } from "../../data/Database"
 
-export const friendship = async (req: Request, res: Response) => {
+export const createFriendship = async (req: Request, res: Response) => {
     try {
   
       const authenticator = new Authenticator()

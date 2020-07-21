@@ -7,7 +7,7 @@ import { Database } from '../../data/Database';
 
 import { InvalidInputError } from '../../errors/InvalidInputError';
 
-export const createRecipeEndpoint = async (req:Request, res:Response) => {
+export const createPost = async (req:Request, res:Response) => {
   try {
     const token = req.headers.authorization as string;
 

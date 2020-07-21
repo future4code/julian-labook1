@@ -1,9 +1,9 @@
 import express from "express";
-import { friendship } from "../controllers/friendships/friendship";
+import { createFriendship } from "../controllers/friendships/create";
 import { deleteFriendship } from "../controllers/friendships/delete";
 
 export const friendshipRouter = express.Router()
 
-friendshipRouter.post("/friendship", friendship)
+friendshipRouter.post("/create", createFriendship)
 
-friendshipRouter.post("/friendship/delete", deleteFriendship)
+friendshipRouter.post("/delete", deleteFriendship)
