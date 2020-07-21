@@ -1,52 +1,28 @@
 import express, { Request, Response } from "express";
 import { AddressInfo } from "net";
 import dotenv from "dotenv";
+
 import { HashManager } from "./service/HashManager";
-import { IdGenerator } from "./service/IdGenerator";
 import { Authenticator } from "./service/Authenticator";
-import { UserDatabase } from "./data/UserDatabase/UserDatabase";
+import { UserDatabase } from "./data/UserDatabase";
 import { friendshipRouter } from "./routes/FriendshipRouter";
+import { postRouter } from "./routes/PostRouter";
+import { userRouter } from "./routes/UserRouter";
+import { signup } from "./controllers/user/signup";
 
 dotenv.config();
 
 const app = express();
 
 app.use(express.json());
-app.use("/friendships", friendshipRouter)
 
-app.post("/signup", async (req: Request, res: Response) => {
-  try {
-    if (!req.body.email || req.body.email.indexOf("@") === -1) {
-      throw new Error("Invalid E-mail");
-    }
+app.use("/friendship", friendshipRouter);
 
-    if (!req.body.password || req.body.password.length < 6) {
-      throw new Error("Invalid Password");
-    }
+app.use('/post', postRouter);
 
-    const userData = {
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-    };
+app.use('/user', userRouter);
 
-    const hashManager = new HashManager();
-    const cipherText = await hashManager.hash(userData.password);
-
-    const idGenerator = new IdGenerator();
-    const id = idGenerator.generateId();
-
-    const userDatabase = new UserDatabase();
-    await userDatabase.create(id, userData.name, userData.email, cipherText);
-
-    const authenticator = new Authenticator();
-    const token = authenticator.generateToken({ id });
-
-    res.status(200).send({ token });
-  } catch (error) {
-    res.status(400).send({ error: error.message });
-  }
-});
+app.post("/signup", signup);
 
 app.post("/login", async (req: Request, res: Response) => {
   try {
@@ -71,11 +47,11 @@ app.post("/login", async (req: Request, res: Response) => {
     const authenticator = new Authenticator();
     const token = authenticator.generateToken({
       id: user.id,
-    });
+    }, "10min");
 
     res.status(200).send({ token });
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    res.status(error.statusCode || 400).send({ error: error.message });
   }
 });
 

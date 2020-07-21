@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { Database } from '../Database';
+import { Database } from './Database';
 
 export class PostDatabase extends Database {
 
@@ -24,7 +24,8 @@ export class PostDatabase extends Database {
       .select('id', 'photo', 'description', 'date_create as createdAt', 'user_id as creatorUserId')
       .from(PostDatabase.TABLE_NAME)
       .where({ id });
-      return { ...result[0], createdAt: moment(result[0].createdAt, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YY') };
+      const data = { ...result[0], createdAt: moment(result[0].createdAt, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YY') };
+      return data;
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }
