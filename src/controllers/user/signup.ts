@@ -32,7 +32,7 @@ export const signup = async (req: Request, res: Response) => {
     await userDatabase.create(id, userData.name, userData.email, cipherText);
 
     const authenticator = new Authenticator();
-    const token = authenticator.generateToken({ id }, "10min");
+    const token = authenticator.generateToken({ id });
 
     res.status(200).send({ token });
   } catch (error) {
