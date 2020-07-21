@@ -6,4 +6,4 @@ export const friendshipRouter = express.Router()
 
 friendshipRouter.post("/create", createFriendship)
 
-friendshipRouter.post("/delete", deleteFriendship)
+friendshipRouter.delete("/delete", deleteFriendship)

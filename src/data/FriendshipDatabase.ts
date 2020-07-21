@@ -13,27 +13,34 @@ export class FriendshipDatabase extends Database {
     }
 
     public async getFriendshipById(user_id_1: string, user_id_2: string): Promise<any> {
-        await this.getConnection()
+        const result = await this.getConnection()
             .select("*")
             .from(FriendshipDatabase.TABLE_NAME)
-            .where(user_id_1)
-            .andWhere(user_id_2)
+            .where({ user_id_2 })
+            .andWhere({ user_id_1 })
+
+        return result[0];
     }
 
     public async getFriendships(user_id_1: string): Promise<any> {
         await this.getConnection()
             .select("*")
             .from(FriendshipDatabase.TABLE_NAME)
-            .where(user_id_1)
+            .where({user_id_1})
             .orWhere(`user_id_2 = ${user_id_1}`)
-            .orderBy(`date_create`)
+            .orderBy("date_create")
     }
 
     public async deleteFriendship(user_id_1: string, user_id_2: string): Promise<any> {
         await this.getConnection()
-            .delete()
-            .from(FriendshipDatabase.TABLE_NAME)
-            .where(user_id_1)
-            .andWhere(user_id_2)
+            .raw(`
+        DELETE FROM ${FriendshipDatabase.TABLE_NAME}
+        WHERE user_id_1 = "${user_id_1}"
+        AND user_id_2 = "${user_id_2}"
+        `)
+        // .from(FriendshipDatabase.TABLE_NAME)
+        // .where(user_id_1)
+        // .andWhere(user_id_2)
+        // .delete()
     }
 }
