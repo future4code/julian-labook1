@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 
-import { Authenticator } from '../../service/Authenticator';
+import { Authenticator, AuthenticationData } from '../../service/Authenticator';
 import { IdGenerator } from '../../service/IdGenerator';
 import { PostDatabase } from '../../data/PostDatabase';
 import { Database } from '../../data/Database';
+
+import { CreatePostInputDTO } from '../../model/Post/CreatePostInputDTO';
 
 import { InvalidInputError } from '../../errors/InvalidInputError';
 
@@ -12,7 +14,7 @@ export const createPost = async (req:Request, res:Response) => {
     const token = req.headers.authorization as string;
 
     const authenticator = new Authenticator();
-    const authData = authenticator.getData(token);
+    const authData:AuthenticationData = authenticator.getData(token);
 
     const { photo, description, type } = req.body;
 
@@ -27,7 +29,9 @@ export const createPost = async (req:Request, res:Response) => {
     const id = idGenerator.generateId();
 
     const postDb = new PostDatabase();
-    await postDb.create(id, photo, description, type, authData.id);
+    const post = new CreatePostInputDTO(id, photo, description, type, authData.id);
+    
+    await postDb.create(post);
 
     res.status(200).send({ message: 'Post created successfully' });
   } catch (error) {

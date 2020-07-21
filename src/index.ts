@@ -1,12 +1,10 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import { AddressInfo } from "net";
 import dotenv from "dotenv";
 
 import { friendshipRouter } from "./routes/FriendshipRouter";
 import { postRouter } from "./routes/PostRouter";
 import { userRouter } from "./routes/UserRouter";
-import { signup } from "./controllers/user/signup";
-import { login } from "./controllers/user/login";
 
 dotenv.config();
 
@@ -19,10 +17,6 @@ app.use("/friendship", friendshipRouter);
 app.use("/post", postRouter);
 
 app.use("/user", userRouter);
-
-app.post("/signup", signup);
-
-app.post("/login", login);
 
 const server = app.listen(process.env.PORT || 3003, () => {
   if (server) {

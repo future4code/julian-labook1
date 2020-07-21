@@ -1,38 +1,51 @@
 import moment from 'moment';
 import { Database } from './Database';
 
+import { CreatePostInputDTO } from '../model/Post/CreatePostInputDTO';
+import { GetPostOutputDTO } from '../model/Post/GetPostOutputDTO';
+import { GetPostInputDTO } from '../model/Post/GetPostInputDTO';
+
+import { InternalServerError } from '../errors/InternalServerError';
+
 export class PostDatabase extends Database {
 
   private static TABLE_NAME:string = 'Labook_Post';
 
   public static getTableName = ():string => PostDatabase.TABLE_NAME;
 
-  public create = async (id:string, photo:string, description:string, type:TYPE, user_id:string):Promise<void> => {
+  public create = async (input:CreatePostInputDTO):Promise<void> => {
     try {
+      const id = input.getId();
+      const photo = input.getPhoto();
+      const description = input.getDescription();
+      const type = input.getType();
+      const user_id = input.getCreatorUserId();
       await this.getConnection()
       .insert({ id, photo, description, type, user_id })
       .into(PostDatabase.TABLE_NAME);
     } catch (error) {
-      throw new Error(error.sqlMessage || error.message);
+      throw new InternalServerError(error.sqlMessage || error.message);
     }
     
   }
 
-  public getById = async (id:string):Promise<any> => {
+  public getById = async (input:GetPostInputDTO):Promise<GetPostOutputDTO> => {
     try {
+      const id = input.getId();
       const result = await this.getConnection()
       .select('id', 'photo', 'description', 'date_create as createdAt', 'user_id as creatorUserId')
       .from(PostDatabase.TABLE_NAME)
       .where({ id });
       const data = { ...result[0], createdAt: moment(result[0].createdAt, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YY') };
-      return data;
+      const post = new GetPostOutputDTO(data.id, data.photo, data.description, data.createdAt, data.type, data.creatorUserId);
+      return post;
     } catch (error) {
-      throw new Error(error.sqlMessage || error.message);
+      throw new InternalServerError(error.sqlMessage || error.message);
     }
   }
 }
 
-enum TYPE {
+export enum TYPE {
   NORMAL = "Normal",
   EVENT = "Event"
 }

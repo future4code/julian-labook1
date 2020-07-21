@@ -25,12 +25,9 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const authenticator = new Authenticator();
-    const token = authenticator.generateToken(
-      {
-        id: user.id,
-      },
-      "10min"
-    );
+    const token = authenticator.generateToken({
+      id: user.id,
+    });
 
     res.status(200).send({ token });
   } catch (error) {
