@@ -5,12 +5,14 @@ import { HashManager } from "./service/HashManager";
 import { IdGenerator } from "./service/IdGenerator";
 import { Authenticator } from "./service/Authenticator";
 import { UserDatabase } from "./data/UserDatabase/UserDatabase";
+import { friendshipRouter } from "./routes/FriendshipRouter";
 
 dotenv.config();
 
 const app = express();
 
 app.use(express.json());
+app.use("/friendships", friendshipRouter)
 
 app.post("/signup", async (req: Request, res: Response) => {
   try {
