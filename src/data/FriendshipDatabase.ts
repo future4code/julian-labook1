@@ -6,19 +6,13 @@ export class FriendshipDatabase extends Database {
     public async createFriendship(
         user_id_1: string,
         user_id_2: string
-    ): Promise<void> {
+    ): Promise<any> {
         await this.getConnection()
-            .insert({
-                user_id_1,
-                user_id_2
-            })
+            .insert({ user_id_1, user_id_2 })
             .into(FriendshipDatabase.TABLE_NAME)
     }
 
-    public async getFriendship(
-        user_id_1: string,
-        user_id_2: string
-    ): Promise<void> {
+    public async getFriendshipById(user_id_1: string, user_id_2: string): Promise<any> {
         await this.getConnection()
             .select("*")
             .from(FriendshipDatabase.TABLE_NAME)
@@ -26,10 +20,16 @@ export class FriendshipDatabase extends Database {
             .andWhere(user_id_2)
     }
 
-    public async deleteFriendship(
-        user_id_1: string,
-        user_id_2: string
-    ): Promise<void> {
+    public async getFriendships(user_id_1: string): Promise<any> {
+        await this.getConnection()
+            .select("*")
+            .from(FriendshipDatabase.TABLE_NAME)
+            .where(user_id_1)
+            .orWhere(`user_id_2 = ${user_id_1}`)
+            .orderBy(`date_create`)
+    }
+
+    public async deleteFriendship(user_id_1: string, user_id_2: string): Promise<any> {
         await this.getConnection()
             .delete()
             .from(FriendshipDatabase.TABLE_NAME)

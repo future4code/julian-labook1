@@ -10,7 +10,7 @@ export const friendship = async (req: Request, res: Response) => {
       const tokenData = authenticator.getData(req.headers.authorization as string)
   
       const friendship = new FriendshipDatabase()
-      friendship.createFriendship(tokenData.id, req.body.user_id)
+      await friendship.createFriendship(tokenData.id, req.body.user_id)
   
       res.status(200).send({
         message: "Friendship created"
