@@ -1,13 +1,14 @@
 import { POST_TYPE } from '../../data/PostDatabase'; 
 
-export class GetPostOutputDTO {
+export class GetFeedOutputDTO {
   constructor (
     private id:string,
     private photo:string,
     private description:string,
     private createdAt:string,
     private type:POST_TYPE,
-    private creatorUserId:string
+    private creatorUserId:string,
+    private creatorUserName:string
   ) {
     if (this.type === "Normal") {
       this.type = POST_TYPE.NORMAL;
@@ -29,6 +30,8 @@ export class GetPostOutputDTO {
   public getType = ():POST_TYPE => this.type;
 
   public getCreatorUserId = ():string => this.creatorUserId;
+
+  public getCreatorUserName = ():string => this.creatorUserName;
 
   public setId = (id:string):void => {
     this.id = id;
@@ -52,5 +55,9 @@ export class GetPostOutputDTO {
 
   public setCreatorUserId = (creatorUserId:string):void => {
     this.creatorUserId = creatorUserId;
+  }
+
+  public setCreatorUserName = (creatorUserName:string):void => {
+    this.creatorUserName = creatorUserName;
   }
 }
