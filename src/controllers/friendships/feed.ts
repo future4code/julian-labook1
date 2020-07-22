@@ -3,6 +3,7 @@ import { Authenticator } from "../../service/Authenticator"
 import { FriendshipDatabase } from "../../data/FriendshipDataBase"
 import { Database } from "../../data/Database"
 import { PostDatabase } from "../../data/PostDatabase";
+import { GetPostInputDTO } from "../../model/Post/GetPostInputDTO";
 
 export const feed = async (req: Request, res: Response) => {
     try {
@@ -29,7 +30,8 @@ export const feed = async (req: Request, res: Response) => {
         const postsDb = new PostDatabase()
         let posts: any = []
         for (let i of friendshipsIds) {
-            posts.push(await postsDb.getById(i))
+            const id = new GetPostInputDTO(i.id);
+            posts.push(await postsDb.getByUserId(id));
         }
 
         res.status(200).send({
