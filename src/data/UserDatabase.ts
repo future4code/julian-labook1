@@ -3,6 +3,8 @@ import { Database } from "./Database";
 export class UserDatabase extends Database {
   private static TABLE_NAME = "Labook_User";
 
+  public static getTableName = ():string => UserDatabase.TABLE_NAME;
+
   async create(id: string, name: string, email: string, password: string) {
     try {
       await this.getConnection()

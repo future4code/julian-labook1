@@ -1,11 +1,11 @@
-import { TYPE } from "../../data/PostDatabase";
+import { POST_TYPE } from "../../data/PostDatabase";
 
 export class CreatePostInputDTO {
   constructor(
     private id:string,
     private photo:string,
     private description:string,
-    private type:TYPE,
+    private type:POST_TYPE,
     private creatorUserId:string
   ) {}
 
@@ -15,7 +15,7 @@ export class CreatePostInputDTO {
 
   public getDescription = ():string => this.description;
 
-  public getType = ():TYPE => this.type;
+  public getType = ():POST_TYPE => this.type;
 
   public getCreatorUserId = ():string => this.creatorUserId;
 
@@ -31,7 +31,7 @@ export class CreatePostInputDTO {
     this.description = this.description
   }
 
-  public setType = (type:TYPE):void => {
+  public setType = (type:POST_TYPE):void => {
     this.type = type;
   }
 

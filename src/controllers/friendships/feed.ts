@@ -4,6 +4,7 @@ import { FriendshipDatabase } from "../../data/FriendshipDataBase"
 import { Database } from "../../data/Database"
 import { PostDatabase } from "../../data/PostDatabase";
 import { GetPostInputDTO } from "../../model/Post/GetPostInputDTO";
+import { GetFeedInputDTO } from "../../model/Post/GetFeedInputDTO";
 
 export const feed = async (req: Request, res: Response) => {
     try {
@@ -21,18 +22,21 @@ export const feed = async (req: Request, res: Response) => {
         let friendshipsIds: any = []
         friendships.map((f: any) => {
             if (tokenData.id === f.user_id_1) {
-                friendshipsIds.push(f.user_id_2)
+                friendshipsIds.push(new GetPostInputDTO(f.user_id_2))
             } else {
-                friendshipsIds.push(f.user_id_1)
+                friendshipsIds.push(new GetPostInputDTO(f.user_id_1))
             }
         })
 
-        const postsDb = new PostDatabase()
-        let posts: any = []
-        for (let i of friendshipsIds) {
-            const id = new GetPostInputDTO(i);
-            posts.push(await postsDb.getByUserId(id));
-        }
+        const feedInput = new GetFeedInputDTO(friendshipsIds);
+
+        const postsDb = new PostDatabase();
+        const posts = postsDb.getFeedByUsersId(feedInput);
+        // let posts: any = []
+        // for (let i of friendshipsIds) {
+        //     const id = new GetPostInputDTO(i.id);
+        //     posts.push(await postsDb.getByUserId(id));
+        // }
 
         res.status(200).send({
             posts
