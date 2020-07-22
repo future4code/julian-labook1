@@ -30,7 +30,7 @@ export const feed = async (req: Request, res: Response) => {
         const postsDb = new PostDatabase()
         let posts: any = []
         for (let i of friendshipsIds) {
-            const id = new GetPostInputDTO(i.id);
+            const id = new GetPostInputDTO(i);
             posts.push(await postsDb.getByUserId(id));
         }
 
