@@ -23,12 +23,13 @@ export class FriendshipDatabase extends Database {
     }
 
     public async getFriendships(user_id_1: string): Promise<any> {
-        await this.getConnection()
+        const result = await this.getConnection()
             .select("*")
             .from(FriendshipDatabase.TABLE_NAME)
-            .where({user_id_1})
-            .orWhere(`user_id_2 = ${user_id_1}`)
-            .orderBy("date_create")
+            .where({ user_id_1 })
+            .orWhere('user_id_2', '=', user_id_1)
+
+        return result
     }
 
     public async deleteFriendship(user_id_1: string, user_id_2: string): Promise<any> {
