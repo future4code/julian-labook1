@@ -10,9 +10,9 @@ export class GetFeedOutputDTO {
     private creatorUserId:string,
     private creatorUserName:string
   ) {
-    if (this.type === "Normal") {
+    if (this.type.toLowerCase() === "normal") {
       this.type = POST_TYPE.NORMAL;
-    } else if (this.type === "Event") {
+    } else if (this.type.toLowerCase() === "event") {
       this.type = POST_TYPE.EVENT;
     } else {
       this.type = POST_TYPE.ANY;

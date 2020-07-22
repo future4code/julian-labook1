@@ -6,6 +6,8 @@ import { PostDatabase } from "../../data/PostDatabase";
 import { GetPostInputDTO } from "../../model/Post/GetPostInputDTO";
 import { GetFeedInputDTO } from "../../model/Post/GetFeedInputDTO";
 
+import { NotFoundError } from "../../errors/NotFoundError";
+
 export const feed = async (req: Request, res: Response) => {
     try {
 
@@ -16,7 +18,7 @@ export const feed = async (req: Request, res: Response) => {
         const friendships = await friendship.getFriendships(tokenData.id)
 
         if (!friendships) {
-            throw new Error("Friendships do not exist")
+            throw new NotFoundError("Friendships do not exist")
         }
 
         let friendshipsIds: any = []
@@ -31,18 +33,13 @@ export const feed = async (req: Request, res: Response) => {
         const feedInput = new GetFeedInputDTO(friendshipsIds);
 
         const postsDb = new PostDatabase();
-        const posts = postsDb.getFeedByUsersId(feedInput);
-        // let posts: any = []
-        // for (let i of friendshipsIds) {
-        //     const id = new GetPostInputDTO(i.id);
-        //     posts.push(await postsDb.getByUserId(id));
-        // }
+        const posts = await postsDb.getFeedByUsersId(feedInput);
 
         res.status(200).send({
             posts
         })
     } catch (err) {
-        res.status(400).send({ error: err.message })
+        res.status(err.statusCode || 400).send({ error: err.message })
     }
 
     await Database.destroyConnection()

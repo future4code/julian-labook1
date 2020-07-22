@@ -4,11 +4,11 @@ import { POST_TYPE } from "../../data/PostDatabase";
 export class GetFeedInputDTO {
   constructor (
     private userInputs:GetPostInputDTO[],
-    private type:POST_TYPE = POST_TYPE.ANY
+    private type:string = ''
   ) {
-    if (this.type === "Normal") {
+    if (this.type.toLowerCase() === "normal") {
       this.type = POST_TYPE.NORMAL;
-    } else if (this.type === "Event") {
+    } else if (this.type.toLocaleLowerCase() === "event") {
       this.type = POST_TYPE.EVENT;
     } else {
       this.type = POST_TYPE.ANY;
@@ -17,7 +17,7 @@ export class GetFeedInputDTO {
 
   public getUserInputs = ():GetPostInputDTO[] => this.userInputs;
 
-  public getType = ():POST_TYPE => this.type;
+  public getType = ():string => this.type;
 
   public setUserInputs = (ids:any[]):void => {
     this.userInputs = ids;
