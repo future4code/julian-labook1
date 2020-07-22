@@ -17,22 +17,19 @@ export const feed = async (req: Request, res: Response) => {
             throw new Error("Friendships do not exist")
         }
 
-        const friendshipsIds = friendships.map((f: any) => {
-            if (tokenData.id = f.user_id_1) {
-                return f.user_id_2
+        let friendshipsIds: any = []
+        friendships.map((f: any) => {
+            if (tokenData.id === f.user_id_1) {
+                friendshipsIds.push(f.user_id_2)
+            } else {
+                friendshipsIds.push(f.user_id_1)
             }
-            if (tokenData.id = f.user_id_2) {
-                return f.user_id_1
-            }
-        }).map((f: any) => {
-            const user_id = f.user_id_1 || f.user_id_2
-            return user_id
         })
 
         const postsDb = new PostDatabase()
-        let posts
+        let posts: any = []
         for (let i of friendshipsIds) {
-            posts = await postsDb.getById(i.user_id)
+            posts.push(await postsDb.getById(i))
         }
 
         res.status(200).send({
