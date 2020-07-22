@@ -1,13 +1,13 @@
 import { Database } from "./Database";
 
 export class UserDatabase extends Database {
-  private tableName = "Labook_User";
+  private static TABLE_NAME = "Labook_User";
 
   async create(id: string, name: string, email: string, password: string) {
     try {
       await this.getConnection()
         .insert({ id, name, email, password })
-        .into(this.tableName);
+        .into(UserDatabase.TABLE_NAME);
 
       Database.destroyConnection();
     } catch (error) {
@@ -19,7 +19,7 @@ export class UserDatabase extends Database {
     try {
       const result = await this.getConnection()
         .select("*")
-        .from(this.tableName)
+        .from(UserDatabase.TABLE_NAME)
         .where({ email });
       Database.destroyConnection();
       return result[0];
@@ -32,7 +32,7 @@ export class UserDatabase extends Database {
     try {
       const result = await this.getConnection()
         .select("*")
-        .from(this.tableName)
+        .from(UserDatabase.TABLE_NAME)
         .where({ id });
       await Database.destroyConnection();
       return result[0];

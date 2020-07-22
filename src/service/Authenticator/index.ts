@@ -1,9 +1,6 @@
 import * as jwt from "jsonwebtoken";
-import dotenv from "dotenv";
 
-dotenv.config();
-
-interface AuthenticationData {
+export interface AuthenticationData {
   id: string;
   device?: string;
 }

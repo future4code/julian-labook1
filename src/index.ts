@@ -1,12 +1,10 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import { AddressInfo } from "net";
 import dotenv from "dotenv";
 
 import { friendshipRouter } from "./routes/FriendshipRouter";
 import { postRouter } from "./routes/PostRouter";
 import { userRouter } from "./routes/UserRouter";
-import { signup } from "./controllers/user/signup";
-import { login } from "./controllers/user/login";
 
 dotenv.config();
 
