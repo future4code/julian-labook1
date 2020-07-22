@@ -7,7 +7,15 @@ export class CreatePostInputDTO {
     private description:string,
     private type:POST_TYPE,
     private creatorUserId:string
-  ) {}
+  ) {
+    if (this.type.toLowerCase() === "normal") {
+      this.type = POST_TYPE.NORMAL;
+    } else if (this.type.toLowerCase() === "event") {
+      this.type = POST_TYPE.EVENT;
+    } else {
+      this.type = POST_TYPE.ANY;
+    }
+  }
 
   public getId = ():string => this.id;
 
