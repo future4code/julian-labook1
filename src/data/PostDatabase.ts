@@ -10,6 +10,7 @@ import { GetFeedInputDTO } from '../model/Post/GetFeedInputDTO';
 import { GetFeedOutputDTO } from '../model/Post/GetFeedOutputDTO';
 
 import { InternalServerError } from '../errors/InternalServerError';
+import { NotFoundError } from '../errors/NotFoundError';
 
 export class PostDatabase extends Database {
 
@@ -32,6 +33,22 @@ export class PostDatabase extends Database {
       throw new InternalServerError(error.sqlMessage || error.message);
     }
 
+  }
+
+  public checkById = async (input:GetPostInputDTO):Promise<boolean> => {
+    try {
+      const id = input.getId();
+      const result = await this.getConnection()
+        .select('*')
+        .from(PostDatabase.TABLE_NAME)
+        .where({ id });
+      if (result.length) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      throw new InternalServerError(error.sqlMessage || error.message);
+    }
   }
 
   public getById = async (input:GetPostInputDTO):Promise<GetPostOutputDTO> => {
