@@ -9,7 +9,7 @@ import { CreatePostInputDTO } from '../../model/Post/CreatePostInputDTO';
 
 import { InvalidInputError } from '../../errors/InvalidInputError';
 
-export const createPost = async (req:Request, res:Response) => {
+export const create = async (req:Request, res:Response) => {
   try {
     const token = req.headers.authorization as string;
 
