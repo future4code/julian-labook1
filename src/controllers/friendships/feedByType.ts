@@ -8,7 +8,7 @@ import { GetFeedInputDTO } from "../../model/Post/GetFeedInputDTO";
 
 import { NotFoundError } from "../../errors/NotFoundError";
 
-export const feed = async (req: Request, res: Response) => {
+export const feedByType = async (req: Request, res: Response) => {
     try {
 
         const authenticator = new Authenticator()
@@ -33,7 +33,7 @@ export const feed = async (req: Request, res: Response) => {
         const feedInput = new GetFeedInputDTO(friendshipsIds);
 
         const postsDb = new PostDatabase();
-        const posts = await postsDb.getFeedByUsersId(feedInput);
+        const posts = await postsDb.getFeedByUsersIdAndType(feedInput);
 
         res.status(200).send({ posts })
     } catch (err) {
