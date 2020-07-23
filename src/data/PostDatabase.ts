@@ -42,7 +42,7 @@ export class PostDatabase extends Database {
         .select('id', 'photo', 'description', 'date_create as createdAt', 'user_id as creatorUserId')
         .from(PostDatabase.TABLE_NAME)
         .where({ id });
-      const data = { ...result[0], createdAt: moment(result[0].createdAt, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY') };
+      const data = { ...result[0], createdAt: moment(result[0].createdAt, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss') };
       const post = new GetPostOutputDTO(data.id, data.photo, data.description, data.createdAt, data.type, data.creatorUserId);
       return post;
     } catch (error) {
@@ -71,7 +71,7 @@ export class PostDatabase extends Database {
         .whereIn(`${p}.user_id`, userIds)
         .orderBy(`${p}.date_create`, 'DESC');
       const posts = result.map((item) => {
-        const data = { ...item, createdAt: moment(item.createdAt, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY') };
+        const data = { ...item, createdAt: moment(item.createdAt, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss') };
         return new GetFeedOutputDTO(data.id, data.photo, data.description, data.createdAt, data.type, data.creatorUserId, data.creatorUserName);
       });
       return posts;
@@ -103,7 +103,7 @@ export class PostDatabase extends Database {
         .andWhere({ type })
         .orderBy(`${p}.date_create`, 'DESC');
       const posts = result.map((item) => {
-        const data = { ...item, createdAt: moment(item.createdAt, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YY') };
+        const data = { ...item, createdAt: moment(item.createdAt, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YY HH:mm:ss') };
         return new GetFeedOutputDTO(data.id, data.photo, data.description, data.createdAt, data.type, data.creatorUserId, data.creatorUserName);
       });
       return posts;
