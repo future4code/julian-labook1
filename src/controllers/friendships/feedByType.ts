@@ -8,7 +8,7 @@ import { GetFeedInputDTO } from "../../model/Post/GetFeedInputDTO";
 
 import { NotFoundError } from "../../errors/NotFoundError";
 
-export const feed = async (req: Request, res: Response) => {
+export const feedByType = async (req: Request, res: Response) => {
     try {
 
         const authenticator = new Authenticator()
@@ -16,7 +16,7 @@ export const feed = async (req: Request, res: Response) => {
 
         const friendship = new FriendshipDatabase()
         const friendships = await friendship.getFriendships(tokenData.id)
-
+console.log(friendships)
         if (!friendships) {
             throw new NotFoundError("Friendships do not exist")
         }
@@ -29,11 +29,11 @@ export const feed = async (req: Request, res: Response) => {
                 friendshipsIds.push(new GetPostInputDTO(f.user_id_1))
             }
         })
-
+console.log(friendshipsIds)
         const feedInput = new GetFeedInputDTO(friendshipsIds);
 
         const postsDb = new PostDatabase();
-        const posts = await postsDb.getFeedByUsersId(feedInput);
+        const posts = await postsDb.getFeedByUsersIdAndType(feedInput);
 
         res.status(200).send({ posts })
     } catch (err) {
