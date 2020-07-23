@@ -16,7 +16,7 @@ export const feedByType = async (req: Request, res: Response) => {
 
         const friendship = new FriendshipDatabase()
         const friendships = await friendship.getFriendships(tokenData.id)
-console.log(friendships)
+
         if (!friendships) {
             throw new NotFoundError("Friendships do not exist")
         }
@@ -29,7 +29,7 @@ console.log(friendships)
                 friendshipsIds.push(new GetPostInputDTO(f.user_id_1))
             }
         })
-console.log(friendshipsIds)
+
         const feedInput = new GetFeedInputDTO(friendshipsIds);
 
         const postsDb = new PostDatabase();
