@@ -30,7 +30,8 @@ export const feedByType = async (req: Request, res: Response) => {
             }
         })
 
-        const feedInput = new GetFeedInputDTO(friendshipsIds);
+        const type = req.query.type as string
+        const feedInput = new GetFeedInputDTO(friendshipsIds, type);
 
         const postsDb = new PostDatabase();
         const posts = await postsDb.getFeedByUsersIdAndType(feedInput);
