@@ -1,12 +1,17 @@
 import { Database } from "./Database";
+import { SignupInputDTO } from "../model/User/SignupInputDTO";
 
 export class UserDatabase extends Database {
   private static TABLE_NAME = "Labook_User";
 
-  public static getTableName = ():string => UserDatabase.TABLE_NAME;
+  public static getTableName = (): string => UserDatabase.TABLE_NAME;
 
-  async create(id: string, name: string, email: string, password: string) {
+  async create(input: SignupInputDTO): Promise<void> {
     try {
+      const id = input.getId();
+      const name = input.getName();
+      const email = input.getEmail();
+      const password = input.getPassword();
       await this.getConnection()
         .insert({ id, name, email, password })
         .into(UserDatabase.TABLE_NAME);
