@@ -29,11 +29,10 @@ export class LikeDatabase extends Database {
 
   public like = async (input:LikeInputDTO):Promise<void> => {
     try {
-      const is_liked:number = 1;
       const post_id = input.getPostId();
       const user_id = input.getLikeCreatorUserId();
       await this.getConnection()
-        .insert({ is_liked, post_id, user_id })
+        .insert({ post_id, user_id })
         .into(LikeDatabase.TABLE_NAME);
     } catch (error) {
       throw new InternalServerError(error.sqlMessage || error.message);
