@@ -1,10 +1,11 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 
-import { Authenticator } from '../../service/Authenticator';
-import { IdGenerator } from '../../service/IdGenerator';
-import { HashManager } from '../../service/HashManager';
-import { UserDatabase } from '../../data/UserDatabase';
-import { Database } from '../../data/Database';
+import { Authenticator } from "../../service/Authenticator";
+import { IdGenerator } from "../../service/IdGenerator";
+import { HashManager } from "../../service/HashManager";
+import { UserDatabase } from "../../data/UserDatabase";
+import { Database } from "../../data/Database";
+import { SignupInputDTO } from "../../model/User/SignupInputDTO";
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -29,7 +30,13 @@ export const signup = async (req: Request, res: Response) => {
     const id = idGenerator.generateId();
 
     const userDatabase = new UserDatabase();
-    await userDatabase.create(id, userData.name, userData.email, cipherText);
+    const user = new SignupInputDTO(
+      id,
+      userData.name,
+      userData.email,
+      cipherText
+    );
+    await userDatabase.create(user);
 
     const authenticator = new Authenticator();
     const token = authenticator.generateToken({ id });
@@ -40,4 +47,4 @@ export const signup = async (req: Request, res: Response) => {
   }
 
   await Database.destroyConnection();
-}
+};
