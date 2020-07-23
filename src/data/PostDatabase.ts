@@ -114,7 +114,7 @@ export class PostDatabase extends Database {
 }
 
 export enum POST_TYPE {
-  ANY = '',
+  ANY = "Normal",
   NORMAL = "Normal",
   EVENT = "Event"
 }

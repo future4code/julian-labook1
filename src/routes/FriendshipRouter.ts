@@ -10,6 +10,6 @@ friendshipRouter.post("/create", createFriendship)
 
 friendshipRouter.delete("/delete", deleteFriendship)
 
-friendshipRouter.get("/feed", feed)
+friendshipRouter.get("/feed/all", feed)
 
-friendshipRouter.get("/feedByType", feedByType)
+friendshipRouter.get("/feed", feedByType)
