@@ -1,4 +1,5 @@
 import { POST_TYPE } from '../../data/PostDatabase'; 
+import { CommentOutputDTO } from './CommentOutputDTO';
 
 export class GetPostOutputDTO {
   constructor (
@@ -6,15 +7,14 @@ export class GetPostOutputDTO {
     private photo:string,
     private description:string,
     private createdAt:string,
-    private type:POST_TYPE,
-    private creatorUserId:string
+    private type:string,
+    private creatorUserId:string,
+    private comments:CommentOutputDTO[]
   ) {
-    if (this.type === "Normal") {
-      this.type = POST_TYPE.NORMAL;
-    } else if (this.type === "Event") {
+    if (this.type === "Event") {
       this.type = POST_TYPE.EVENT;
     } else {
-      this.type = POST_TYPE.ANY;
+      this.type = POST_TYPE.NORMAL;
     }
   }
 
@@ -26,9 +26,11 @@ export class GetPostOutputDTO {
 
   public getCreatedAt = ():string => this.createdAt;
 
-  public getType = ():POST_TYPE => this.type;
+  public getType = ():string => this.type;
 
   public getCreatorUserId = ():string => this.creatorUserId;
+
+  public getComments = ():CommentOutputDTO[] => this.comments;
 
   public setId = (id:string):void => {
     this.id = id;
@@ -52,5 +54,9 @@ export class GetPostOutputDTO {
 
   public setCreatorUserId = (creatorUserId:string):void => {
     this.creatorUserId = creatorUserId;
+  }
+
+  public setComments = (comments:CommentOutputDTO[]):void => {
+    this.comments = comments;
   }
 }

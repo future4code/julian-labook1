@@ -2,6 +2,7 @@ import moment from 'moment';
 
 import { Database } from './Database';
 import { UserDatabase } from './UserDatabase';
+import { CommentDatabase } from './CommentDatabase';
 
 import { CreatePostInputDTO } from '../model/Post/CreatePostInputDTO';
 import { GetPostInputDTO } from '../model/Post/GetPostInputDTO';
@@ -10,7 +11,7 @@ import { GetFeedInputDTO } from '../model/Post/GetFeedInputDTO';
 import { GetFeedOutputDTO } from '../model/Post/GetFeedOutputDTO';
 
 import { InternalServerError } from '../errors/InternalServerError';
-import { NotFoundError } from '../errors/NotFoundError';
+import { CommentOutputDTO } from '../model/Post/CommentOutputDTO';
 
 export class PostDatabase extends Database {
 
@@ -55,12 +56,40 @@ export class PostDatabase extends Database {
 
     try {
       const id = input.getId();
+      const p = PostDatabase.TABLE_NAME;
+      const u = UserDatabase.getTableName();
+      const c = CommentDatabase.getTableName();
       const result = await this.getConnection()
-        .select('id', 'photo', 'description', 'date_create as createdAt', 'user_id as creatorUserId')
-        .from(PostDatabase.TABLE_NAME)
-        .where({ id });
+        .select(
+          `${p}.id`,
+          `${p}.photo`,
+          `${p}.description`,
+          `${p}.date_create as createdAt`,
+          `${p}.type`,
+          `${u}.id as creatorUserId`,
+          `${u}.name as creatoruserName`
+        )
+        .from(p)
+        .join(u, `${u}.id`, `${p}.user_id`)
+        .where(`${p}.id`, id);
       const data = { ...result[0], createdAt: moment(result[0].createdAt, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss') };
-      const post = new GetPostOutputDTO(data.id, data.photo, data.description, data.createdAt, data.type, data.creatorUserId);
+      const commentsResult = await this.getConnection()
+        .select(
+          `${c}.id`,
+          `${c}.content`,
+          `${c}.date_create as createdAt`,
+          `${u}.id as commentCreatorUserId`,
+          `${u}.name as commentCreatorUserName`
+        )
+        .from(c)
+        .join(u, `${u}.id`, `${c}.user_id`)
+        .where(`${c}.post_id`, id)
+        .orderBy(`${c}.date_create`, 'DESC');
+      const commentsData = commentsResult.map((item) => {
+        const data = { ...item, createdAt: moment(item.createdAt, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss') };
+        return new CommentOutputDTO(data.id, data.content, data.createdAt, data.commentCreatorUserId, data.commentCreatorUserName);
+      })
+      const post = new GetPostOutputDTO(data.id, data.photo, data.description, data.createdAt, data.type, data.creatorUserId, commentsData);
       return post;
     } catch (error) {
       throw new InternalServerError(error.sqlMessage || error.message);
